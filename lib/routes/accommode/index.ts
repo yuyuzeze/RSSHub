@@ -46,9 +46,9 @@ async function handler(ctx) {
             return {
                 title: title.find('span').html().split('<br>')[1],
                 link: `https://accommode.com${title.attr('href')}`,
-                image: item.find('div.fs-c-productListItem__image a img').attr('src'),
+                image: item.find('div.fs-c-productListItem__image a img').data('layzr'),
                 category: title.find('span').html().split('<br>')[0],
-                price: `${item.find('div.fs-c-productListItem__prices .fs-c-price__value').text()}${item.find('.fs-c-productPrice__addon__label').text()}`,
+                price: item.find('div.fs-c-productListItem__prices > .fs-c-productPrice--selling .fs-c-price__value').text(),
                 pubDate: parseDate(new Date().toISOString().split('T')[0]),
             };
         });
@@ -57,16 +57,19 @@ async function handler(ctx) {
         list.map((item) =>
             cache.tryGet(item.link, async () => {
                 const response = await ofetch(item.link);
-                const $ = load(response.data);
+                const $ = load(response);
 
-                item.description = $('.fs-p-productDescription').html();
+                item.description = `${item.price}(税込)<br><img src="${item.image}" /><br>${$('.fs-p-productDescription').html()}`;
                 return item;
             })
         )
     );
 
     return {
-        title: `ACCOMMODE - ${$('.fs-c-breadcrumb__listItem a')
+        title: `ACCOMMODE - ${$('nav.fs-c-breadcrumb')
+            .first()
+            .find('.fs-c-breadcrumb__listItem')
+            .slice(1)
             .map((_, el) => $(el).text())
             .get()
             .join(' > ')}`,
