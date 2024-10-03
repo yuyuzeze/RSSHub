@@ -11,7 +11,7 @@ export const route: Route = {
     example: 'https://accommode.com/c/goods/goods_pouch?sort=latest',
     parameters: {
         category: '分类，必填项',
-        subCategory: '子分类，选填项，目的是为了兼容老逻辑'
+        subCategory: '子分类，选填项，目的是为了兼容老逻辑',
     },
     name: '新作, バッグ, ファッション, 雑貨, モバイル, アクセサリー',
     maintainers: ['yuyuzeze'],
@@ -34,31 +34,30 @@ async function handler(ctx) {
 
     const response = await got({
         method: 'get',
-        url: url,
+        url,
     });
     const $ = load(response.data);
 
-    const list = $('div.groupLayout div.gl_Item')
+    const list = $('div.fs-c-productList__list article.fs-c-productList__list__item')
         .toArray()
         .map((item) => {
-            item = $(item)
-            const title = item.find('h2.itemGroup a').html();
+            item = $(item);
+            const title = item.find('h2.fs-c-productListItem__productName a');
             return {
-                title: title.split('<br>')[1],
-                link: item.find('div.FS2_thumbnail_container.FS2_additional_image_detail_container a').attr('href'),
-                image: item.find('div.FS2_thumbnail_container.FS2_additional_image_detail_container a img').attr('src'),
-                category: title.split('<br>')[0],
-                price: item.find('span.itemPrice').text(),
-                description: item.find('div.itemGroup_description').text(),
+                title: title.find('span').html().split('<br>')[1],
+                link: `https://accommode.com${title.attr('href')}`,
+                image: item.find('div.fs-c-productListItem__image a img').attr('src'),
+                category: title.find('span').html().split('<br>')[0],
+                price: `${item.find('div.fs-c-productListItem__prices .fs-c-price__value').text()}${item.find('.fs-c-productPrice__addon__label').text()}`,
                 pubDate: parseDate(new Date().toISOString().split('T')[0]),
-            }
+            };
         });
 
     const items = await Promise.all(
         list.map((item) =>
             cache.tryGet(item.link, async () => {
                 const response = await ofetch(item.link);
-                const $ = load(response);
+                const $ = load(response.data);
 
                 item.description = $('.fs-p-productDescription').html();
                 return item;
@@ -67,7 +66,10 @@ async function handler(ctx) {
     );
 
     return {
-        title: `ACCOMMODE - ${$('div.fs-c-breadcrumb__listItem a').text().join(' > ')}`,
+        title: `ACCOMMODE - ${$('.fs-c-breadcrumb__listItem a')
+            .map((_, el) => $(el).text())
+            .get()
+            .join(' > ')}`,
         link: url,
         item: items,
     };
