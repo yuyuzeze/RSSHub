@@ -22,7 +22,7 @@ export const route: Route = {
 async function handler(ctx) {
     const category = ctx.req.param('category');
     const subCategory = ctx.req.param('subCategory');
-    const sort = ctx.req.param('sort');
+    const sort = ctx.req.query('sort');
 
     let url = `https://accommode.com/c/${category}`;
     if (subCategory) {
