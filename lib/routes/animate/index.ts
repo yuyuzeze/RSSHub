@@ -22,13 +22,20 @@ export const route: Route = {
 async function handler(ctx) {
     const category = ctx.req.param('category');
     const page = ctx.req.param('page');
-    const queryString = ctx.req.queryString;
+    const queryParams = ctx.req.query();
 
     let url = `https://www.animate-onlineshop.jp/${category}`;
-    if (page) {
-        url += `/${page}`;
-    }
-    if (queryString) {
+    url += page ? `/${page}` : `/`;
+    if (queryParams) {
+        const queryString = Object.entries(queryParams)
+            .map(([key, value]) => {
+                // 处理数组类型的参数
+                if (Array.isArray(value)) {
+                    return value.map((v) => `${encodeURIComponent(key)}=${encodeURIComponent(v)}`).join('&');
+                }
+                return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+            })
+            .join('&');
         url += `?${queryString}`;
     }
 
@@ -66,16 +73,15 @@ async function handler(ctx) {
                                     <p>${item.price}</p>
                                     ${item.status}<br>
                                     ${item.category}<br>
-                                    ${item.saleDate}`;
+                                    ${item.saleDate}<br>
+                                    ${$('.detail_info').html()}`;
                 return item;
             })
         )
     );
 
     return {
-        title: `ACCOMMODE - ${$('nav.fs-c-breadcrumb')
-            .first()
-            .find('.fs-c-breadcrumb__listItem')
+        title: `Animate > ${$('#breadcrumb li')
             .slice(1)
             .map((_, el) => $(el).text())
             .get()
