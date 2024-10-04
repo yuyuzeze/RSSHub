@@ -6,7 +6,7 @@ import { parseDate } from '@/utils/parse-date';
 import ofetch from '@/utils/ofetch';
 
 export const route: Route = {
-    path: '/:category/:subCategory?/:sort?',
+    path: '/:category/:subCategory?',
     categories: ['shopping'],
     example: 'https://accommode.com/c/goods/goods_pouch?sort=latest',
     parameters: {
