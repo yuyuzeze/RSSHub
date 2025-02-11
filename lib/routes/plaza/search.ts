@@ -31,7 +31,7 @@ async function handler(ctx) {
     const items = data.result.items.map((item) => ({
         title: item.name,
         link: `https://www.plazastyle.com/shop/g/g${item.goods}`,
-        image: `https://www.plazastyle.com/img/goods/L/${item.image_url}`,
+        image: `https://www.plazastyle.com/img/goods/S/${item.src_s}`,
         description: `
             <div>
                 <img src="https://www.plazastyle.com/images/sys/item/${item.image_url}" />
