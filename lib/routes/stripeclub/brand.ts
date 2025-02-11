@@ -32,7 +32,7 @@ async function handler(ctx) {
     });
     const $ = load(response.data);
 
-    const list = $('ul[data-js="item-product-list"] > li')
+    const list = $('.l-container ul.grid > li.w-full')
         .toArray()
         .map((item) => {
             item = $(item);
