@@ -52,7 +52,7 @@ async function handler(ctx) {
                 const response = await ofetch(item.link);
                 const $ = load(response);
 
-                item.description = `￥${item.price}(税込)<br><img src="${item.image}" /><br>${$('[data-design-block-name="通常本文M"]').html()}`;
+                item.description = `￥${item.price}(税込)<br><img src="${item.image}" /><br>${$('[data-tab-contents="tab-item-detail-info"] [data-design-block-name="通常本文M"]').html()}`;
                 return item;
             })
         )
