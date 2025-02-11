@@ -20,7 +20,7 @@ async function handler(ctx) {
     const queryString = new URLSearchParams(queryParams).toString();
     if (queryString) {
         url += `?${queryString}`;
-        url += `&timestamp=${Date.now()}`;
+        url += `&_=${Date.now()}`;
     }
 
     const { data } = await got({
@@ -28,9 +28,7 @@ async function handler(ctx) {
         url,
     });
 
-    const jsonData = JSON.parse(data);
-
-    const items = jsonData.result.items.map((item) => ({
+    const items = data.result.items.map((item) => ({
         title: item.name,
         link: `https://www.plazastyle.com/shop/g/g${item.goods}`,
         image: `https://www.plazastyle.com/img/goods/L/${item.image_url}`,
@@ -48,7 +46,7 @@ async function handler(ctx) {
     }));
 
     return {
-        title: `PLAZA - ${jsonData.request_params.q || '全品类'}`,
+        title: `PLAZA - ${data.meta.request_params.q || '全品类'}`,
         link: url,
         item: items,
     };
