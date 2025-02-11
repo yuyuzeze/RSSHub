@@ -8,7 +8,7 @@ import ofetch from '@/utils/ofetch';
 export const route: Route = {
     path: '/:category/:subCategory?',
     categories: ['shopping'],
-    example: 'https://accommode.com/c/goods/goods_pouch?sort=latest',
+    example: '/accommode/goods/goods_pouch?sort=latest',
     parameters: {
         category: '分类，必填项',
         subCategory: '子分类，选填项，目的是为了兼容老逻辑',

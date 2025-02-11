@@ -6,9 +6,9 @@ import { parseDate } from '@/utils/parse-date';
 import ofetch from '@/utils/ofetch';
 
 export const route: Route = {
-    path: '/search',
+    path: '/brand/:brand',
     categories: ['shopping'],
-    example: '/stripeclub/search?so=NEW&pl=100&pu=10000',
+    example: '/brand/maisondefleur/search?so=NEW',
     name: '商品一覧',
     maintainers: ['yuyuzeze'],
     description: ``,
@@ -17,7 +17,8 @@ export const route: Route = {
 
 async function handler(ctx) {
     const queryParams = ctx.req.query();
-    let url = 'https://stripe-club.com/search';
+    const brand = ctx.req.param('brand');
+    let url = `https://stripe-club.com/brand/${brand}/search`;
 
     // 将所有查询参数添加到URL
     const queryString = new URLSearchParams(queryParams).toString();
@@ -59,7 +60,10 @@ async function handler(ctx) {
     );
 
     return {
-        title: `STRIPE CLUB - ${$('.dblc-normal-heading-1').text()}`,
+        title: `STRIPE CLUB - ${$('[data-design-block-name="パンくず"] li span')
+            .map((_, el) => $(el).text().trim())
+            .get()
+            .join(' > ')}`,
         link: url,
         item: items,
     };
