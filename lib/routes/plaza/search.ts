@@ -34,7 +34,7 @@ async function handler(ctx) {
         image: `https://www.plazastyle.com/img/goods/S/${item.src_s}`,
         description: `
             <div>
-                <img src="https://www.plazastyle.com/images/sys/item/${item.image_url}" />
+                <img src="https://www.plazastyle.com/img/goods/L/${item.image_url}" />
                 <p>価格: ￥${item.price}</p>
                 <p>ブランド: ${item.rits_brand_name || ''}</p>
                 ${item.new ? '<p>新商品</p>' : ''}
