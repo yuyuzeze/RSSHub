@@ -32,14 +32,14 @@ async function handler(ctx) {
     });
     const $ = load(response.data);
 
-    const list = $('#catalog_list > li.catalogList_item')
+    const list = $('#catalog_list > div.catalogList_item')
         .toArray()
         .map((item) => {
             item = $(item);
             return {
                 title: item.find('.commodityName').text(),
                 link: 'https://samanthathavasa.jp' + item.find('.ga4_event_select_item').attr('href'),
-                image: item.find('.wrap-product-image .product-image img').data('src'),
+                image: item.find('.wrap-product-image .product-image img').attr('src'),
                 category: item.find('.brandName').text(),
                 price: item.find('.regular_price').text(),
                 pubDate: parseDate(new Date().toISOString().split('T')[0]),
