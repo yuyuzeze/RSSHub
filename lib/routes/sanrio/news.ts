@@ -13,7 +13,7 @@ export const route: Route = {
 
 async function handler(ctx) {
     const queryParams = ctx.req.query();
-    const category = ctx.req.params.category;
+    const category = ctx.req.param('category');
     let url = 'https://www.sanrio.co.jp/wp-json/wp/v2/news';
 
     // 将所有查询参数添加到URL
@@ -28,15 +28,15 @@ async function handler(ctx) {
     });
 
     const items = data.map((item) => {
-        const categories = item.category.map(c => c.name);
+        const categories = item.category.map((c) => c.name);
 
         return {
             title: item.title.rendered,
             link: item.link,
             category: categories,
             image: item.thumbnail.url,
-            description: `<div><img src="${item.thumbnail.url}" /></div>`
-        }
+            description: `<div><img src="${item.thumbnail.url}" /></div>`,
+        };
     });
 
     return {
