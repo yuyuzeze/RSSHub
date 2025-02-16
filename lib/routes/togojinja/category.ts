@@ -44,7 +44,7 @@ async function handler(ctx) {
                 const response = await ofetch(item.link);
                 const $ = load(response);
 
-                item.description = `${$('.inner.typesquare_tags').html()}`;
+                item.description = `${$('.news-sec-post').html()}`;
                 return item;
             })
         )
